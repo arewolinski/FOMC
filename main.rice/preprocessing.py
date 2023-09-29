@@ -58,7 +58,9 @@ def process_txt(path_to_txt):
 
     try:
         words_with_spaces = []
-        line_check = 0 #debugging purpose
+
+        #debugging purpose
+        #line_check = 0 
 
         # Open the text file for reading line by line
         with open(path_to_txt, 'r') as file:
@@ -68,9 +70,13 @@ def process_txt(path_to_txt):
                 words = line.split()
 
                 for word in words:
-                    line_check += 1 #debugging purpose
+
+                    #debugging purpose
+                    #line_check += 1 
                     words_with_spaces.append(word)
-                    print(f"Processed word: {word} & line: {line_check}") #debuggin purpose
+
+                    #debuggin purpose
+                    #print(f"Processed word: {word} & line: {line_check}") 
 
 
         return words_with_spaces
@@ -79,8 +85,8 @@ def process_txt(path_to_txt):
         return []
 
 # Example usage:
-#result = process_txt("main.rice/files/sample.txt")
-#print(result)
+result = process_txt("main.rice/files/sample.txt")
+print(result)
 
 
 
