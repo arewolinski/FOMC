@@ -3,6 +3,7 @@
 
 
 import PyPDF2
+import spacy
 
 def pdf_to_text(path_to_pdf, path_to_txt):
     """
@@ -45,7 +46,7 @@ def pdf_to_text(path_to_pdf, path_to_txt):
 def process_txt(path_to_txt):
     """
     Takes in a txt file path and returns a list of Strings which represents the words after they have been split 
-    at spaces. Note that this function does not get rid of the spaces; that is for a later function
+    at spaces. Note that the way that we are splitting the words already gets rid of the spaces in the words for us.
 
     Inputs: 
 
@@ -57,7 +58,7 @@ def process_txt(path_to_txt):
 
 
     try:
-        words_with_spaces = []
+        words_without_spaces = []
 
         #debugging purpose
         #line_check = 0 
@@ -73,20 +74,179 @@ def process_txt(path_to_txt):
 
                     #debugging purpose
                     #line_check += 1 
-                    words_with_spaces.append(word)
+                    words_without_spaces.append(word)
 
                     #debuggin purpose
                     #print(f"Processed word: {word} & line: {line_check}") 
 
 
-        return words_with_spaces
+        return words_without_spaces
     except FileNotFoundError:
         print(f"File not found: {path_to_txt}")
         return []
 
 # Example usage:
-result = process_txt("main.rice/files/sample.txt")
-print(result)
+# result = process_txt("main.rice/files/sample.txt")
+# print(result)
+
+def remove_punctuation(transcript_list, punctuation):
+    """
+    Takes in a list of Strings representing the FOMC transcript split at spaces and removes all punctuation in the variable
+    named punctuation from the Strings within transcript_list.
+
+    Inputs:
+
+    transcript_list - A list of strings where each string represents a word within the FOMC transcript
+    punctuation - A tuple of strings where each string represents a punctuation mark we want removed from the transcript
+
+    Returns: A list of strings free of punctuation
+
+    """
+
+    new_transcript_list = []
+
+    for word in transcript_list:
+        intermediate_word = ''
+        for character in word:
+            if character not in punctuation:
+                intermediate_word += character
+
+        
+        if len(intermediate_word) > 0:
+            new_transcript_list.append(intermediate_word)
+
+    
+    return new_transcript_list
+
+
+# Example usage:
+# transcript_list = process_txt("main.rice/files/sample.txt")
+# punctuation = (".", ",","!","/","?")
+# print(remove_punctuation(transcript_list, punctuation))
+
+def remove_preliminary_text(transcript_list):
+    """
+    Removes preliminary text, which is all text before the converstaion between members starts, by removing all text that
+    appears before the word CHAIRMAN appears in the transcript. In all of the transcripts I have looked at, the meaningful conversation
+    starts when the CHAIRMAN first speaks. Thus, we can remove all text from the transcript before the first instance of this word.
+
+    Inputs: 
+
+    transcript_list - A list of strings where each string represents a word within the FOMC transcript
+
+    Returns: A transcript_list that is free from preliminary procedures 
+    """
+    can_start = False
+    new_transcript_list = []
+
+    for word in transcript_list:
+
+        if (word == "CHAIRMAN"):
+            can_start = True
+
+        if can_start:
+            new_transcript_list.append(word)
+
+
+    return new_transcript_list
+
+# Example usage:
+# transcript_list = process_txt("main.rice/files/sample.txt")
+# print(remove_preliminary_text(transcript_list))
+
+
+def convert_all_words_to_lowercase(transcript_list):
+    """
+    Converts all the words within transcript_list EXCEPT for words that are all caps since these all caps words are acryonyms
+    that don't make sense lower case or are referencing who is speaking which is fine to be kept all caps
+
+    Inputs:
+    transcript_list - A list of strings where each individual string represents a word within the FOMC transcript
+
+    Returns: A list of strings that are lowercased except if the word is all caps
+    """
+
+    new_transcript_list = []
+
+    for word in transcript_list:
+        if(not word.isupper()):
+            new_transcript_list.append(word.lower())
+        else:
+            new_transcript_list.append(word)
+
+    return new_transcript_list
+
+
+# Example usage:
+# transcript_list = process_txt("main.rice/files/sample.txt")
+# print(convert_all_words_to_lowercase(transcript_list))
+
+def remove_stopwords(transcript_list, stopwords):
+    """
+    Removes all words within stopwords from the transcript_list
+
+    Inputs: 
+    
+    transcript_list - A list of strings representing the words within the FOMC transcripts
+    stopwords - A tuple of strings representing the stopwords we want removed form the transcript
+
+    Returns - The transcript_list free from stopwords
+
+    """
+
+    new_transcript_list = []
+
+    for word in transcript_list:
+        if(word not in stopwords):
+            new_transcript_list.append(word)
+
+
+    return new_transcript_list
+
+# Example usage:
+# transcript_list = process_txt("main.rice/files/sample.txt")
+# stopwords = ("of", "the", "and", "a")
+# print(remove_stopwords(transcript_list, stopwords))
+
+def root_cutter(transcript_list):
+    """
+    Note: Need to discuss this function since I have tried several different libraries and none of them
+    operate very well.
+
+    Takes the transcript list and converts all tenses of the same word to the same root word 
+    (e.g. “prefers” and “preferential” both become “prefer”). I utilize the spaCy library which reduces words
+    down to their original tense. Note that sometimes the word changes as a result of the lemmantization process
+    that spaCy incorporates (e.g. better --> good). 
+
+    Inputs:
+
+    transcript_list - A list of strings where each inner string represents a word within the FOMC transcript
+
+    Returns: A transcript_list that has all similar words cut down to the same common word.
+    """
+
+    # Initialize the spaCy English language model
+    nlp = spacy.load("en_core_web_sm")
+
+    stemmed_transcript = []
+
+    # Apply spaCy stemming to each word in the transcript_list
+    for word in transcript_list:
+        doc = nlp(word)
+        for token in doc:
+            stemmed_transcript.append(token.lemma_)
+
+    return stemmed_transcript
+
+
+
+    
+
+# Example usage:
+# transcript_list = process_txt("main.rice/files/sample.txt")
+# print(transcript_list)
+# transcript_list2 = remove_punctuation(transcript_list, (",", "."))
+# print(root_cutter(transcript_list2))
 
 
 
