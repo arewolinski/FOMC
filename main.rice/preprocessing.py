@@ -5,7 +5,7 @@
 import PyPDF2
 import spacy
 
-def pdf_to_text(path_to_pdf, path_to_txt):
+def pdf_to_txt(path_to_pdf, path_to_txt):
     """
     Takes in a String representing a path to a pdf file and a String representing a path to a txt file, writing the contents 
     of the PDF file to the txt file. If the txt file is not empty, this function will essentially remove everything that was 
@@ -40,7 +40,7 @@ def pdf_to_text(path_to_pdf, path_to_txt):
 
 
 # Example usage:
-#pdf_to_text('main.rice/files/FOMC_2000_Meeting_Transcript.pdf', 'main.rice/files/sample.txt')
+#pdf_to_txt('main.rice/files/FOMC_2000_Meeting_Transcript.pdf', 'main.rice/files/sample_pre_process.txt')
 
 
 def process_txt(path_to_txt):
@@ -86,7 +86,7 @@ def process_txt(path_to_txt):
         return []
 
 # Example usage:
-# result = process_txt("main.rice/files/sample.txt")
+# result = process_txt("main.rice/files/sample_pre_process.txt")
 # print(result)
 
 def remove_punctuation(transcript_list, punctuation):
@@ -120,7 +120,7 @@ def remove_punctuation(transcript_list, punctuation):
 
 
 # Example usage:
-# transcript_list = process_txt("main.rice/files/sample.txt")
+# transcript_list = process_txt("main.rice/files/sample_pre_process.txt")
 # punctuation = (".", ",","!","/","?")
 # print(remove_punctuation(transcript_list, punctuation))
 
@@ -151,7 +151,7 @@ def remove_preliminary_text(transcript_list):
     return new_transcript_list
 
 # Example usage:
-# transcript_list = process_txt("main.rice/files/sample.txt")
+# transcript_list = process_txt("main.rice/files/sample_pre_process.txt")
 # print(remove_preliminary_text(transcript_list))
 
 
@@ -178,7 +178,7 @@ def convert_all_words_to_lowercase(transcript_list):
 
 
 # Example usage:
-# transcript_list = process_txt("main.rice/files/sample.txt")
+# transcript_list = process_txt("main.rice/files/sample_pre_process.txt")
 # print(convert_all_words_to_lowercase(transcript_list))
 
 def remove_stopwords(transcript_list, stopwords):
@@ -204,7 +204,7 @@ def remove_stopwords(transcript_list, stopwords):
     return new_transcript_list
 
 # Example usage:
-# transcript_list = process_txt("main.rice/files/sample.txt")
+# transcript_list = process_txt("main.rice/files/sample_pre_process.txt")
 # stopwords = ("of", "the", "and", "a")
 # print(remove_stopwords(transcript_list, stopwords))
 
@@ -240,10 +240,8 @@ def root_cutter(transcript_list):
 
 
 
-    
-
 # Example usage:
-# transcript_list = process_txt("main.rice/files/sample.txt")
+# transcript_list = process_txt("main.rice/files/sample_pre_process.txt")
 # print(transcript_list)
 # transcript_list2 = remove_punctuation(transcript_list, (",", "."))
 # print(root_cutter(transcript_list2))
@@ -251,7 +249,33 @@ def root_cutter(transcript_list):
 
 
 
-def pdf_to_final(pdf_file_path):
+def create_txt(transcript_list, output_file):
+    """
+    Takes a list of Strings and outputs a txt file where there is a space between each 
+    String in transcript_list. Essentially, if you were to call create_txt(process_txt(txt_file))
+    the output would be equivalent to the original input (just the spacing would not be the same). 
+    """
+
+    try:
+        # Open the output file in write mode
+        with open(output_file, 'w') as file:
+            # Join the strings in the list with spaces and write them to the file
+            file.write(' '.join(transcript_list))
+        print(f'Successfully wrote the strings to {output_file}')
+    except Exception as e:
+        print(f'Error: {e}')
+
+# Example usage:
+# transcript_list = process_txt("main.rice/files/sample_pre_process.txt")
+# output_file = "main.rice/files/sample_post_process.txt"
+# create_txt(transcript_list, output_file)
+
+
+
+
+
+
+def pdf_to_final(pdf_file_path, txt_pre_process, txt_post_process):
 
     """
     Takes in a PDF file path and uses all of the above functions to turn this PDF file path into a completely pre-processed transcript.
@@ -260,7 +284,41 @@ def pdf_to_final(pdf_file_path):
 
     Outputs: A list of Strings that represents the entirely pre-processed transcript
     """
-    pass
+
+    punctuation = [".", ",", "!", "@", "?", "/", "$", "#", "%", "&", "*", "(", ")","<", ">","[", "]", "{", "}", "+", "=", "-", "`", "~"]
+    stopwords = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours", "yourself", "yourselves", "he", "him",
+                 "his", "himself", "she", "her", "hers", "herself", "it", "its", "itself", "they", "them", "their", "theirs", "themselves",
+                 "what", "which", "who", "whom", "this", "that", "these", "those", "am", "is", "are", "was", "were", "be", "been", "being",
+                 "have", "has", "had", "having", "do", "does", "did", "doing", "a", "an", "the", "and", "but", "if", "or", "because", "as",
+                 "until", "while", "of", "at", "by", "for", "with", "about", "against", "between", "into", "through", "during", "before",
+                 "after", "above", "below", "to", "from", "up", "down", "in", "out", "on", "off", "over", "under", "again", "further", "then",
+                 "once", "here", "there", "when", "where", "why", "how", "all", "any", "both", "each", "few", "more", "most", "other", "some",
+                 "such", "no", "nor", "not", "only", "own", "same", "so", "than", "too", "very", "can", "will", "just", "should", "now"]
+
+
+    pdf_to_txt(pdf_file_path, txt_pre_process)
+    transcript_list = process_txt(txt_pre_process)
+    transcript_list = remove_punctuation(transcript_list, punctuation)
+    transcript_list = remove_preliminary_text(transcript_list)
+    transcript_list = convert_all_words_to_lowercase(transcript_list)
+    transcript_list = remove_stopwords(transcript_list, stopwords)
+    transcript_list = root_cutter(transcript_list)
+    create_txt(transcript_list, txt_post_process)
+
+    return transcript_list
+
+# Example usage:
+pdf_to_final('main.rice/files/FOMC_2000_Meeting_Transcript.pdf', 'main.rice/files/sample_pre_process.txt', 'main.rice/files/sample_post_process.txt')
+
+
+
+
+
+
+
+    
+    
+    
 
 
 
