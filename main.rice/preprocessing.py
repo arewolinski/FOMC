@@ -5,6 +5,7 @@
 import PyPDF2
 import spacy
 
+
 def pdf_to_txt(path_to_pdf, path_to_txt):
     """
     Takes in a String representing a path to a pdf file and a String representing a path to a txt file, writing the contents 
@@ -40,7 +41,7 @@ def pdf_to_txt(path_to_pdf, path_to_txt):
 
 
 # Example usage:
-#pdf_to_txt('main.rice/files/FOMC_2000_Meeting_Transcript.pdf', 'main.rice/files/sample_pre_process.txt')
+# pdf_to_txt('main.rice/files/FOMC_2000_Meeting_Transcript.pdf', 'main.rice/files/sample_pre_process.txt')
 
 
 def process_txt(path_to_txt):
@@ -120,7 +121,7 @@ def remove_punctuation(transcript_list, punctuation):
 
 
 # Example usage:
-# transcript_list = process_txt("main.rice/files/sample_pre_process.txt")
+# transcript_list = process_txt("main.rice/files/sample.txt")
 # punctuation = (".", ",","!","/","?")
 # print(remove_punctuation(transcript_list, punctuation))
 
@@ -302,13 +303,13 @@ def pdf_to_final(pdf_file_path, txt_pre_process, txt_post_process):
     transcript_list = remove_preliminary_text(transcript_list)
     transcript_list = convert_all_words_to_lowercase(transcript_list)
     transcript_list = remove_stopwords(transcript_list, stopwords)
-    transcript_list = root_cutter(transcript_list)
+    #transcript_list = root_cutter(transcript_list)
     create_txt(transcript_list, txt_post_process)
 
     return transcript_list
 
 # Example usage:
-pdf_to_final('main.rice/files/FOMC_2000_Meeting_Transcript.pdf', 'main.rice/files/sample_pre_process.txt', 'main.rice/files/sample_post_process.txt')
+print(pdf_to_final('main.rice/files/FOMC_2000_Meeting_Transcript.pdf', 'main.rice/files/sample_pre_process.txt', 'main.rice/files/sample_post_process.txt'))
 
 
 
