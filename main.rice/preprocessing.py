@@ -309,7 +309,7 @@ def pdf_to_final(pdf_file_path, txt_pre_process, txt_post_process):
     return transcript_list
 
 # Example usage:
-print(pdf_to_final('main.rice/files/FOMC_2000_Meeting_Transcript.pdf', 'main.rice/files/sample_pre_process.txt', 'main.rice/files/sample_post_process.txt'))
+# print(pdf_to_final('main.rice/files/FOMC_2000_Meeting_Transcript.pdf', 'main.rice/files/sample_pre_process.txt', 'main.rice/files/sample_post_process.txt'))
 
 
 
