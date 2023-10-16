@@ -2,7 +2,7 @@
 #and update structure as necessary. Refer to API for a more thorough explanation of what everything does
 
 
-import PyPDF2
+import pdfplumber
 import spacy
 
 
@@ -22,13 +22,13 @@ def pdf_to_txt(path_to_pdf, path_to_txt):
 
 
     try:
-        #Creates a PdfReader object (check the PyPDF2 library for more details)
-        pdf_reader = PyPDF2.PdfReader(path_to_pdf)
         text = ""
-        
-        #Reading from pdf_reader using the extract_text() method found within the PyPDF2 library
-        for page in pdf_reader.pages:
-            text += page.extract_text()
+
+        #Utilizing pdfplumber library which is more accurate than PyPDF2 library
+        with pdfplumber.open(path_to_pdf) as pdf:
+            for page in pdf.pages:
+                text += page.extract_text()
+
         
         with open(path_to_txt, 'w', encoding='utf-8') as txt_file:
             txt_file.write(text)
@@ -41,7 +41,7 @@ def pdf_to_txt(path_to_pdf, path_to_txt):
 
 
 # Example usage:
-# pdf_to_txt('main.rice/files/FOMC_2000_Meeting_Transcript.pdf', 'main.rice/files/sample_pre_process.txt')
+pdf_to_txt('main.rice/files/FOMC_2000_Meeting_Transcript.pdf', 'main.rice/files/sample_pre_process.txt')
 
 
 def process_txt(path_to_txt):

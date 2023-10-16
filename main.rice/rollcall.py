@@ -16,12 +16,12 @@ def results_of_roll_call(path_to_pdf, txt_pre_process):
 
     Returns: A string that is the paragraph resulted from the roll call voting.
     """
-    print("instance 1")
+
     preprocessing.pdf_to_txt(path_to_pdf, txt_pre_process)
-    print("instance 2")
+
     transcript_list = preprocessing.process_txt(txt_pre_process)
 
-    output_string = "empty"
+    output_string = ""
 
     #Need to be after the start point and before the end point in order to record in output_string
     after_start_point = False
@@ -34,19 +34,21 @@ def results_of_roll_call(path_to_pdf, txt_pre_process):
 
     for word in transcript_list:
 
+        #print(last_word)
+        
+        #If we are after the start point and before the end point, we want to add everything to output_string
+        if(after_start_point and before_end_point):
+            output_string += word + " "
+
         #Checking if "Call the roll" was said in order to check if we have reached the roll call point yet
-        if(two_ago_word == "Call" and last_word == "the" and word == "roll"):
-            print("instance 3")
+        if(two_ago_word == "Call" and last_word == "the" and word == "roll."):
+
             after_start_point = True
         
         #Checks if we pass the roll call portion in which case we are not before the end point anymore
         if(after_start_point and word == "CHAIRMAN"):
-            print("instance 4")
-            before_end_point = False
 
-        #If we are after the start point and before the end point, we want to add everything to output_string
-        if(after_start_point and before_end_point):
-            output_string += word
+            before_end_point = False
 
         #Creating copies of the strings so we don't run into reference issues
         two_ago_word = last_word[:]
