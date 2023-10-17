@@ -41,7 +41,7 @@ def pdf_to_txt(path_to_pdf, path_to_txt):
 
 
 # Example usage:
-pdf_to_txt('main.rice/files/FOMC_2000_Meeting_Transcript.pdf', 'main.rice/files/sample_pre_process.txt')
+# pdf_to_txt('main.rice/files/FOMC_2000_Meeting_Transcript.pdf', 'main.rice/files/sample_pre_process.txt')
 
 
 def process_txt(path_to_txt):
