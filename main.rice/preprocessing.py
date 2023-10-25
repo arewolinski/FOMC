@@ -106,6 +106,7 @@ def remove_punctuation(transcript_list, punctuation):
 
     new_transcript_list = []
 
+    #Iterating over each character in each word and only keeping it if it is not in punctuation
     for word in transcript_list:
         intermediate_word = ''
         for character in word:
@@ -140,6 +141,7 @@ def remove_preliminary_text(transcript_list):
     can_start = False
     new_transcript_list = []
 
+    #Remove everything before the Chairman opens up the discussion
     for word in transcript_list:
 
         if (word == "CHAIRMAN"):
@@ -169,6 +171,7 @@ def convert_all_words_to_lowercase(transcript_list):
 
     new_transcript_list = []
 
+    #Doesn't convert all caps words to lowercase, but everything else is converted to lowercase
     for word in transcript_list:
         if(not word.isupper()):
             new_transcript_list.append(word.lower())
@@ -286,7 +289,9 @@ def pdf_to_final(pdf_file_path, txt_pre_process, txt_post_process):
     Outputs: A list of Strings that represents the entirely pre-processed transcript
     """
 
-    punctuation = [".", ",", "!", "@", "?", "/", "$", "#", "%", "&", "*", "(", ")","<", ">","[", "]", "{", "}", "+", "=", "-", "`", "~"]
+    punctuation = [".", ",", "!", "@", "?", "/", "$", "#", "%", "&", "*", "(", ")","<", ">","[", "]", "{", "}", "+", "=", "-", "`", "~", ":",
+                   ";", "'", "!", "$"]
+    
     stopwords = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours", "yourself", "yourselves", "he", "him",
                  "his", "himself", "she", "her", "hers", "herself", "it", "its", "itself", "they", "them", "their", "theirs", "themselves",
                  "what", "which", "who", "whom", "this", "that", "these", "those", "am", "is", "are", "was", "were", "be", "been", "being",
