@@ -185,32 +185,47 @@ def convert_all_words_to_lowercase(transcript_list):
 # transcript_list = process_txt("main.rice/files/sample_pre_process.txt")
 # print(convert_all_words_to_lowercase(transcript_list))
 
-def remove_stopwords(transcript_list, stopwords):
+def remove_stopwords(transcript_list, stop_word_file_path):
     """
     Removes all words within stopwords from the transcript_list
 
     Inputs: 
     
     transcript_list - A list of strings representing the words within the FOMC transcripts
-    stopwords - A tuple of strings representing the stopwords we want removed form the transcript
+    stop_word_file_path - A String representing a path to a txt file where the stopwords have been input
 
     Returns - The transcript_list free from stopwords
 
     """
 
+    stop_word_list = []
+    
+    #Opening the stop_word_file_path and turning it into a list of Strings, building out stop_word_list
+    try:
+        with open(stop_word_file_path, 'r') as file:
+            for line in file:
+                
+                words = line.split()
+
+                for word in words:
+
+                    stop_word_list.append(word)
+    except FileNotFoundError:
+        print(f"File not found: {stop_word_file_path}")
+
+    #Using stop_word_list to filter out any stopwords within transcript_list
     new_transcript_list = []
 
     for word in transcript_list:
-        if(word not in stopwords):
+        if(word not in stop_word_list):
             new_transcript_list.append(word)
-
 
     return new_transcript_list
 
 # Example usage:
 # transcript_list = process_txt("main.rice/files/sample_pre_process.txt")
-# stopwords = ("of", "the", "and", "a")
-# print(remove_stopwords(transcript_list, stopwords))
+# stop_word_file_path = "main.rice/files/stop_word_list.txt"
+# print(remove_stopwords(transcript_list, stop_word_file_path))
 
 def root_cutter(transcript_list):
     """
@@ -291,15 +306,6 @@ def pdf_to_final(pdf_file_path, txt_pre_process, txt_post_process):
 
     punctuation = [".", ",", "!", "@", "?", "/", "$", "#", "%", "&", "*", "(", ")","<", ">","[", "]", "{", "}", "+", "=", "-", "`", "~", ":",
                    ";", "'", "!", "$"]
-    
-    stopwords = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours", "yourself", "yourselves", "he", "him",
-                 "his", "himself", "she", "her", "hers", "herself", "it", "its", "itself", "they", "them", "their", "theirs", "themselves",
-                 "what", "which", "who", "whom", "this", "that", "these", "those", "am", "is", "are", "was", "were", "be", "been", "being",
-                 "have", "has", "had", "having", "do", "does", "did", "doing", "a", "an", "the", "and", "but", "if", "or", "because", "as",
-                 "until", "while", "of", "at", "by", "for", "with", "about", "against", "between", "into", "through", "during", "before",
-                 "after", "above", "below", "to", "from", "up", "down", "in", "out", "on", "off", "over", "under", "again", "further", "then",
-                 "once", "here", "there", "when", "where", "why", "how", "all", "any", "both", "each", "few", "more", "most", "other", "some",
-                 "such", "no", "nor", "not", "only", "own", "same", "so", "than", "too", "very", "can", "will", "just", "should", "now"]
 
 
     pdf_to_txt(pdf_file_path, txt_pre_process)
@@ -307,7 +313,9 @@ def pdf_to_final(pdf_file_path, txt_pre_process, txt_post_process):
     transcript_list = remove_punctuation(transcript_list, punctuation)
     transcript_list = remove_preliminary_text(transcript_list)
     transcript_list = convert_all_words_to_lowercase(transcript_list)
-    transcript_list = remove_stopwords(transcript_list, stopwords)
+
+    #Hardcoding in the particular filepath for the stopwords; can change this so that it is an input of the function if wanted
+    transcript_list = remove_stopwords(transcript_list, "main.rice/files/stop_word_list.txt")
     #transcript_list = root_cutter(transcript_list)
     create_txt(transcript_list, txt_post_process)
 
