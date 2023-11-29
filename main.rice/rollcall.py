@@ -176,9 +176,9 @@ def clean_voting_parse(word_count, transcript_list):
 
 
 #Example usage:
-path_to_pdf = 'main.rice/files/Transcripts Raw pdf/1_1989_transcript.pdf'
-txt_pre_process = 'main.rice/files/sample_pre_process.txt'
-print(roll_call(path_to_pdf, txt_pre_process))
+# path_to_pdf = 'main.rice/files/Transcripts Raw pdf/1_1989_transcript.pdf'
+# txt_pre_process = 'main.rice/files/sample_pre_process.txt'
+# print(roll_call(path_to_pdf, txt_pre_process))
 
 
 #Example usage in bulk:
