@@ -69,7 +69,7 @@ def yes_no_count_last_30(word_count, transcript_list):
 
     Outputs:
 
-    yes_no_count - An int representing the number of "Yes" and "No" that have appeared in the last 30 words
+    yes_no_count - An int representing the number of "Yes" and "No" that have appeared in the last num words
     """
 
     start_idx = 0
@@ -176,9 +176,9 @@ def clean_voting_parse(word_count, transcript_list):
 
 
 #Example usage:
-# path_to_pdf = 'main.rice/files/Transcripts Raw pdf/1_1999_transcript.pdf'
-# txt_pre_process = 'main.rice/files/sample_pre_process.txt'
-# print(roll_call(path_to_pdf, txt_pre_process))
+path_to_pdf = 'main.rice/files/Transcripts Raw pdf/1_1989_transcript.pdf'
+txt_pre_process = 'main.rice/files/sample_pre_process.txt'
+print(roll_call(path_to_pdf, txt_pre_process))
 
 
 #Example usage in bulk:

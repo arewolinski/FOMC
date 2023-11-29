@@ -36,5 +36,5 @@ def word_frequency(cleaned_list):
 
 
 #Example Usage:
-# transcript = preprocessing.pdf_to_final('main.rice/files/FOMC_2000_Meeting_Transcript.pdf', 'main.rice/files/sample_pre_process.txt', 'main.rice/files/sample_post_process.txt')
-# print(word_frequency(transcript))
+transcript = preprocessing.pdf_to_final('main.rice/files/FOMC_2000_Meeting_Transcript.pdf', 'main.rice/files/sample_pre_process.txt', 'main.rice/files/sample_post_process.txt')
+print(word_frequency(transcript))
