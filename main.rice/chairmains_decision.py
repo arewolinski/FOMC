@@ -17,24 +17,23 @@ def chairmans_decision(path_to_pdf, txt_pre_process):
     Outputs:
     A string representing the paragraph in the text which is the chairman's recommendation
     """
-
+    print("Before pdf_to_txt")
     preprocessing.pdf_to_txt(path_to_pdf, txt_pre_process)
-
+    print("before process_txt")
     transcript_list = preprocessing.process_txt(txt_pre_process)
-
+    print("after process_txt")
     output_string = ""
-
-    word_idx = 0
 
     #Again, we are using a cool_down variable when we find an instance of voting that requires us to be 200 words past when 
     #voting first happened in order to have another vote
     cool_down = 0
 
-    #We never need a variable for the specific that we are looking at so underbar is short-hand for indicating we don't need it 
+    word_idx = 0
+
+    #We never need a variable for the specific iteration we are looking at so underbar is short-hand for indicating we aren't utilizing each index 
     for _ in transcript_list:
 
         if((rollcall.yes_no_count_last_30(word_idx, transcript_list)) > 7 and cool_down > 200):
-            print("An instance of voting happened")
 
             #Adding the parsed transcript as well as a couple new lines for spacing purposes in case 
             #clean_voting_parse is triggered again since multiple voting decisions were made
@@ -70,11 +69,11 @@ def clean_recommendation_parse(word_idx, transcript_list):
         #BlueBook and the roll call vote 
         lower_bound_idx = word_idx - 1000
 
+
         if (lower_bound_idx < 0):
             return "error: need to adjust algorithm to slice at a greater index"
 
         intermediate_parse = transcript_list[lower_bound_idx : word_idx]
-
 
         previous_word = ""
 
@@ -92,7 +91,7 @@ def clean_recommendation_parse(word_idx, transcript_list):
         for word in intermediate_parse:
 
             #The not statement filters out the case where Mr. Bernard is called for voting
-            if (previous_word == "BERNARD" and word != "Chairman" and check_length_of_speech(current_idx, transcript_list)):
+            if (combination_of_bernard(previous_word) and word != "Chairman" and check_length_of_speech(current_idx, transcript_list)):
 
                 start_speech_idx = current_idx
                 end_speech_idx = find_end_speech_index(start_speech_idx, transcript_list)
@@ -111,6 +110,25 @@ def clean_recommendation_parse(word_idx, transcript_list):
 
         return output
 
+def combination_of_bernard(previous_word):
+     """
+     This function isolates the boolean logic of finding all of the possible combinations of the word "bernard" that shows up
+     between capitalization and punctuation.
+
+     Inputs:
+     previous_word - A string representing the previous word that we are running our boolean logic on
+
+     Outputs:
+     A boolean, either True or False, representing whether or not the previous_word is equal to any of our combinations. 
+     """
+
+    #These are all of the possible combinations of how his name shows up that I can see within the FOMC transcript
+     if(previous_word == "BERNARD" or previous_word == "BERNARD." or previous_word == "Bernard" or previous_word == "Bernard." or previous_word == "bernard"):
+          return True
+     else:
+          return False
+     
+
 
 def check_length_of_speech(bernard_idx, transcript_list):
         """
@@ -124,7 +142,6 @@ def check_length_of_speech(bernard_idx, transcript_list):
 
         transcript_list - A list of Strings where the concatenated strings yield an FOMC transcript from 1989 - 1998
         """
-
         bernard_count = 0
 
         #Starting word is at the bernard_idx (which is the first word Mr. Bernard says)
@@ -179,7 +196,7 @@ def find_end_speech_index(start_speech_index, transcript_list):
 
 
 #Example Usage:
-print(chairmans_decision('main.rice/files/Transcripts Raw pdf/8_1993_transcript.pdf', 'main.rice/files/sample_pre_process.txt'))   
+print(chairmans_decision('main.rice/files/Transcripts Raw pdf/8_1991_transcript.pdf', 'main.rice/files/sample_pre_process.txt'))   
 
 
 
