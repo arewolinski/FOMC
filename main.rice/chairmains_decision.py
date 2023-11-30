@@ -17,11 +17,11 @@ def chairmans_decision(path_to_pdf, txt_pre_process):
     Outputs:
     A string representing the paragraph in the text which is the chairman's recommendation
     """
-    print("Before pdf_to_txt")
+
     preprocessing.pdf_to_txt(path_to_pdf, txt_pre_process)
-    print("before process_txt")
+
     transcript_list = preprocessing.process_txt(txt_pre_process)
-    print("after process_txt")
+
     output_string = ""
 
     #Again, we are using a cool_down variable when we find an instance of voting that requires us to be 200 words past when 
@@ -100,7 +100,7 @@ def clean_recommendation_parse(word_idx, transcript_list):
             previous_word = word
 
         if(start_speech_idx == -1 and end_speech_idx == -1):
-             return "error: this is a check for debugging purposes"
+             return "error: found an instance of voting but couldn't find the recommendation for the vote"
 
         optimal_slice = transcript_list[start_speech_idx : (end_speech_idx + 1)]
 
@@ -196,7 +196,13 @@ def find_end_speech_index(start_speech_index, transcript_list):
 
 
 #Example Usage:
-print(chairmans_decision('main.rice/files/Transcripts Raw pdf/8_1991_transcript.pdf', 'main.rice/files/sample_pre_process.txt'))   
+# print(chairmans_decision('main.rice/files/Transcripts Raw pdf/8_1991_transcript.pdf', 'main.rice/files/sample_pre_process.txt'))   
+
+#Example usage in bulk:
+for num in range(10):
+    path_to_pdf = f'main.rice/files/Transcripts Raw pdf/1_199{num}_transcript.pdf'
+    txt_pre_process = 'main.rice/files/sample_pre_process.txt'
+    print("Year 199{num}:" + "\n" + chairmans_decision(path_to_pdf, txt_pre_process))
 
 
 
