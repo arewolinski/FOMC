@@ -22,6 +22,8 @@ def chairmans_decision(path_to_pdf, txt_pre_process):
 
     transcript_list = preprocessing.process_txt(txt_pre_process)
 
+    #print(transcript_list)
+
     output_string = ""
 
     #Again, we are using a cool_down variable when we find an instance of voting that requires us to be 200 words past when 
@@ -123,7 +125,7 @@ def combination_of_bernard(previous_word):
      """
 
     #These are all of the possible combinations of how his name shows up that I can see within the FOMC transcript
-     if(previous_word == "BERNARD" or previous_word == "BERNARD." or previous_word == "Bernard" or previous_word == "Bernard." or previous_word == "bernard"):
+     if(previous_word == "BERNARD" or previous_word == "BERNARD."):
           return True
      else:
           return False
@@ -132,7 +134,7 @@ def combination_of_bernard(previous_word):
 
 def check_length_of_speech(bernard_idx, transcript_list):
         """
-        Checks that Mr. Bernard speaks for more than 30 words in order to qualify as him giving his recommendation.
+        Checks that Mr. Bernard speaks for more than 50 words in order to qualify as him giving his recommendation.
         I use this heuristic since he sometimes says a sentence or two between his recommendation and him calling the vote,
         but these are usually short sentences that can be weeded out by word count.
 
@@ -155,7 +157,7 @@ def check_length_of_speech(bernard_idx, transcript_list):
             bernard_count += 1
             current_word = transcript_list[bernard_idx + bernard_count]
 
-        if (bernard_count > 30):
+        if (bernard_count > 50):
             return True
         else:
             return False
@@ -191,18 +193,18 @@ def find_end_speech_index(start_speech_index, transcript_list):
             end_idx += 1
             current_word = transcript_list[end_idx]
 
-        return end_idx    
+        return (end_idx - 1)   
 
 
 
 #Example Usage:
-# print(chairmans_decision('main.rice/files/Transcripts Raw pdf/8_1991_transcript.pdf', 'main.rice/files/sample_pre_process.txt'))   
+# print(chairmans_decision('main.rice/files/Transcripts Raw pdf/1_1991_transcript.pdf', 'main.rice/files/sample_pre_process.txt'))   
 
 #Example usage in bulk:
 for num in range(10):
     path_to_pdf = f'main.rice/files/Transcripts Raw pdf/1_199{num}_transcript.pdf'
     txt_pre_process = 'main.rice/files/sample_pre_process.txt'
-    print("Year 199{num}:" + "\n" + chairmans_decision(path_to_pdf, txt_pre_process))
+    print(f'Year 199{num}:' + "\n" + chairmans_decision(path_to_pdf, txt_pre_process))
 
 
 
